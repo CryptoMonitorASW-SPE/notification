@@ -8,33 +8,15 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.util.network.UnresolvedAddressException
-import it.unibo.domain.Crypto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.io.IOException
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 import org.slf4j.LoggerFactory
-
-@Serializable(with = EventTypeSerializer::class)
-data class EventType(
-    val type: String,
-) {
-    companion object {
-        val CRYPTO_UPDATE_USD = EventType("CRYPTO_UPDATE_USD")
-        val CRYPTO_UPDATE_EUR = EventType("CRYPTO_UPDATE_EUR")
-    }
-}
-
-@Serializable
-data class EventPayload(
-    val eventType: EventType,
-    val payload: List<Crypto>,
-)
 
 class EventDispatcherAdapter(
     private val httpServerHost: String = "event-dispatcher",
@@ -45,22 +27,20 @@ class EventDispatcherAdapter(
     private val client = HttpClient(CIO)
     private val mutex = Mutex()
 
-    fun publish(data: EventPayload) {
+    fun notifyUser(data: JsonElement) {
         scope.launch {
             mutex.withLock {
                 try {
-                    val jsonData = Json.encodeToString(data)
-                    logger.info("Publishing data: $jsonData")
                     val response: HttpResponse =
                         client.post {
                             url {
                                 protocol = URLProtocol.HTTP
                                 host = httpServerHost
                                 port = httpServerPort
-                                encodedPath = "/realtime/events/cryptomarketdata"
+                                encodedPath = "/realtime/events/notifyUser"
                             }
                             contentType(ContentType.Application.Json)
-                            setBody(jsonData)
+                            setBody(data)
                         }
                     logger.info("Response: ${response.status}")
                 } catch (e: IOException) {

@@ -36,7 +36,7 @@ sealed class Currency(
     data object EUR : Currency("eur")
 
     companion object {
-        fun getAllCurrencies(): List<Currency> = listOf(USD, EUR)
+        private fun getAllCurrencies(): List<Currency> = listOf(USD, EUR)
 
         fun fromCode(code: String): Currency {
             val upperCaseCode = code.uppercase()
