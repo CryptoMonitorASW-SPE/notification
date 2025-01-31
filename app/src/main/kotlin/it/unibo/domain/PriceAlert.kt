@@ -5,5 +5,5 @@ data class PriceAlert(
     val cryptoId: String,
     val price: Double,
     val currency: Currency,
-    val message: Message
+    val message: String,
 )

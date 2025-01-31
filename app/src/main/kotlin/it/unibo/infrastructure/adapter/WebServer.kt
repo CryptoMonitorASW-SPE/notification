@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package it.unibo.infrastructure.adapter
 
 import io.ktor.http.*
@@ -12,16 +14,15 @@ import io.ktor.server.routing.*
 import it.unibo.application.NotificationService
 import it.unibo.domain.PriceUpdate
 
-
 class WebServer(private val notificationService: NotificationService) {
     companion object {
         const val PORT = 8080
         const val GRACE_PERIOD = 1000L
         const val TIMEOUT = 5000L
     }
+
     private val logger = org.slf4j.LoggerFactory.getLogger("WebServer")
 
-    //Currency.fromCode(currencyParam)
     private val server =
         embeddedServer(Netty, port = PORT) {
             install(ContentNegotiation) { json() }
@@ -48,23 +49,12 @@ class WebServer(private val notificationService: NotificationService) {
                         call.respond(HttpStatusCode.BadRequest, "Missing required parameters: userId and currency")
                         return@post
                     }
-
-                    //val message = call.receive<Message>()
-                    //logger.info("message in JSON body: $message")
-
                     call.respond(HttpStatusCode.OK, "Alert created")
-
-                }
-
-                get("/notificationStatus") {
-                    //val statuses = Currency.getAllCurrencies().associateWith { manager.isRunning(it) }
-                    //call.respond(statuses)
                 }
 
                 get("/health") {
                     call.respond(mapOf("status" to "healthy"))
                 }
-
             }
         }
 
