@@ -6,11 +6,11 @@ import kotlinx.serialization.Serializable
 data class CryptoPrice(
     val id: String,
     val symbol: String,
-    val price: Double
+    val price: Double,
 )
 
 @Serializable
 data class PriceUpdate(
     val timestamp: String,
-    val payload: List<CryptoPrice>
+    val payload: List<CryptoPrice>,
 )
