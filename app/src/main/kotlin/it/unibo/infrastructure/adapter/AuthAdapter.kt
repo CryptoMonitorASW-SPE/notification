@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:no-wildcard-imports")
+
 package it.unibo.infrastructure.adapter
 
 import com.auth0.jwt.JWT
@@ -6,10 +8,8 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 
-
 // This service is responsible for validating JWT tokens.
 class AuthService(private val jwtSecret: String) {
-
     /**
      * Validates the JWT token and returns the user ID if valid; otherwise, returns null.
      *
@@ -41,8 +41,11 @@ class AuthService(private val jwtSecret: String) {
  * @return The userId if the token is valid, or null after sending an unauthorized response.
  */
 suspend fun ApplicationCall.authenticate(jwtSecret: String): String? {
-    val token = request.cookies["authToken"]
-        ?: request.headers["Authorization"]?.removePrefix("Bearer ")?.trim()
+    val token =
+        request.cookies["authToken"]
+            ?: request.headers["Authorization"]
+                ?.removePrefix("Bearer ")
+                ?.trim()
 
     if (token == null) {
         respondText("Unauthorized: No auth token provided.", status = HttpStatusCode.Unauthorized)
