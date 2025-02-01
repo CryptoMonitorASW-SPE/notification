@@ -17,7 +17,7 @@ import it.unibo.domain.Message
 import it.unibo.domain.PriceAlert
 import it.unibo.domain.PriceUpdate
 import it.unibo.domain.PriceUpdateCurrency
-import org.slf4j.LoggerFactory
+import kotlinx.serialization.SerializationException
 
 class WebServer(private val notificationService: NotificationService) {
     companion object {
@@ -25,8 +25,6 @@ class WebServer(private val notificationService: NotificationService) {
         const val GRACE_PERIOD = 1000L
         const val TIMEOUT = 5000L
     }
-
-    private val logger = LoggerFactory.getLogger("CoinGeckoApp")
 
     private val server =
         embeddedServer(Netty, port = PORT) {
@@ -71,8 +69,11 @@ class WebServer(private val notificationService: NotificationService) {
                     val message: Message =
                         try {
                             call.receive<Message>()
-                        } catch (e: Exception) {
-                            call.respond(HttpStatusCode.BadRequest, "Invalid message format")
+                        } catch (e: SerializationException) {
+                            call.respond(HttpStatusCode.BadRequest, "Invalid message format: ${e.message}")
+                            return@post
+                        } catch (e: NumberFormatException) {
+                            call.respond(HttpStatusCode.BadRequest, "Invalid number format: ${e.message}")
                             return@post
                         }
 

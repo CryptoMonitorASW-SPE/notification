@@ -9,6 +9,7 @@ import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.eq
 import org.litote.kmongo.reactivestreams.KMongo
+import org.litote.kmongo.setValue
 
 class MongoPriceAlertRepository : PriceAlertRepository {
     // “price_alerts” is the Mongo collection name.
@@ -39,5 +40,9 @@ class MongoPriceAlertRepository : PriceAlertRepository {
     }
 
     override suspend fun markAsTriggered(alert: PriceAlert) {
+        alertsCollection.updateOne(
+            PriceAlert::userId eq alert.userId,
+            setValue(PriceAlert::triggered, true),
+        )
     }
 }
