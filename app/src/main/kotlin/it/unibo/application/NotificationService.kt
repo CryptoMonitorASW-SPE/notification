@@ -1,7 +1,10 @@
 package it.unibo.application
 
-import it.unibo.domain.PriceUpdate
+import it.unibo.domain.PriceAlert
+import it.unibo.domain.PriceUpdateCurrency
 
 interface NotificationService {
-    fun savePriceUpdate(priceUpdate: PriceUpdate)
+    suspend fun handlePriceUpdate(priceUpdate: PriceUpdateCurrency)
+
+    suspend fun createAlert(alert: PriceAlert)
 }

@@ -12,7 +12,12 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import it.unibo.application.NotificationService
+import it.unibo.domain.Currency
+import it.unibo.domain.Message
+import it.unibo.domain.PriceAlert
 import it.unibo.domain.PriceUpdate
+import it.unibo.domain.PriceUpdateCurrency
+import org.slf4j.LoggerFactory
 
 class WebServer(private val notificationService: NotificationService) {
     companion object {
@@ -20,6 +25,8 @@ class WebServer(private val notificationService: NotificationService) {
         const val GRACE_PERIOD = 1000L
         const val TIMEOUT = 5000L
     }
+
+    private val logger = LoggerFactory.getLogger("CoinGeckoApp")
 
     private val server =
         embeddedServer(Netty, port = PORT) {
@@ -31,16 +38,17 @@ class WebServer(private val notificationService: NotificationService) {
                         call.respond(HttpStatusCode.BadRequest, "Missing required parameter: currency")
                         return@post
                     }
-
                     val priceUpdate = call.receive<PriceUpdate>()
-                    notificationService.savePriceUpdate(priceUpdate)
+                    val priceUpdateCurrency = PriceUpdateCurrency(Currency.fromCode(currencyParam), priceUpdate)
+
+                    notificationService.handlePriceUpdate(priceUpdateCurrency)
                     call.respond(HttpStatusCode.OK, "Data received")
                 }
 
                 post("/createAlert") {
                     val userId = call.parameters["userId"]
                     val cryptoId = call.parameters["cryptoId"]
-                    val price = call.parameters["price"]
+                    val priceParam = call.parameters["price"]
                     val currencyParam = call.parameters["currency"]
 
                     if (userId == null) {
@@ -55,10 +63,24 @@ class WebServer(private val notificationService: NotificationService) {
                         call.respond(HttpStatusCode.BadRequest, "Missing required parameter: cryptoId")
                         return@post
                     }
-                    if (price == null) {
+                    if (priceParam == null) {
                         call.respond(HttpStatusCode.BadRequest, "Missing required parameter: price")
                         return@post
                     }
+
+                    val message: Message =
+                        try {
+                            call.receive<Message>()
+                        } catch (e: Exception) {
+                            call.respond(HttpStatusCode.BadRequest, "Invalid message format")
+                            return@post
+                        }
+
+                    val currency = Currency.fromCode(currencyParam)
+                    val price = priceParam.toDouble()
+
+                    val alert = PriceAlert(userId, cryptoId, price, currency, message)
+                    notificationService.createAlert(alert)
                     call.respond(HttpStatusCode.OK, "Alert created")
                 }
 

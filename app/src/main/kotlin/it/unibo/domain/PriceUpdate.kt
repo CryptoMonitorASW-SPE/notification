@@ -14,3 +14,8 @@ data class PriceUpdate(
     val timestamp: String,
     val payload: List<CryptoPrice>,
 )
+
+data class PriceUpdateCurrency(
+    val currency: Currency,
+    val priceUpdate: PriceUpdate,
+)

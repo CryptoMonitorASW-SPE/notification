@@ -8,6 +8,7 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.util.network.UnresolvedAddressException
+import it.unibo.domain.port.EventDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,12 +23,12 @@ class EventDispatcherAdapter(
     private val httpServerHost: String = "event-dispatcher",
     private val httpServerPort: Int = 3000,
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
-) {
+) : EventDispatcher {
     private val logger = LoggerFactory.getLogger(EventDispatcherAdapter::class.java)
     private val client = HttpClient(CIO)
     private val mutex = Mutex()
 
-    fun notifyUser(data: JsonElement) {
+    override fun notifyUser(data: JsonElement) {
         scope.launch {
             mutex.withLock {
                 try {
