@@ -4,12 +4,13 @@ package it.unibo.infrastructure.adapter
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.auth0.jwt.exceptions.JWTVerificationException
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 
 // This service is responsible for validating JWT tokens.
-class AuthService(private val jwtSecret: String) {
+class AuthAdapter(private val jwtSecret: String) {
     /**
      * Validates the JWT token and returns the user ID if valid; otherwise, returns null.
      *
@@ -23,9 +24,13 @@ class AuthService(private val jwtSecret: String) {
             val decodedJWT = verifier.verify(token)
             // Assumes that the token contains a claim named "userId"
             decodedJWT.getClaim("userId").asString()
-        } catch (ex: Exception) {
-            // Log the exception (in production, consider using a proper logging framework)
-            println("JWT validation error: ${ex.message}")
+        } catch (ex: JWTVerificationException) {
+            // Log the JWT verification exception
+            println("JWT verification error: ${ex.message}")
+            null
+        } catch (ex: IllegalArgumentException) {
+            // Log the illegal argument exception
+            println("Invalid argument: ${ex.message}")
             null
         }
     }
@@ -52,11 +57,10 @@ suspend fun ApplicationCall.authenticate(jwtSecret: String): String? {
         return null
     }
 
-    val authService = AuthService(jwtSecret)
-    val userId = authService.validateToken(token)
+    val authAdapter = AuthAdapter(jwtSecret)
+    val userId = authAdapter.validateToken(token)
     if (userId == null) {
         respondText("Unauthorized: Invalid auth token.", status = HttpStatusCode.Unauthorized)
-        return null
     }
     return userId
 }
