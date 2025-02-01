@@ -44,15 +44,12 @@ class WebServer(private val notificationService: NotificationService) {
                 }
 
                 post("/createAlert") {
-                    val userId = call.parameters["userId"]
+                    val userId = call.authenticate(System.getenv("JWT_SECRET")) ?: return@post
+
                     val cryptoId = call.parameters["cryptoId"]
                     val priceParam = call.parameters["price"]
                     val currencyParam = call.parameters["currency"]
 
-                    if (userId == null) {
-                        call.respond(HttpStatusCode.BadRequest, "Missing required parameter: userId")
-                        return@post
-                    }
                     if (currencyParam == null) {
                         call.respond(HttpStatusCode.BadRequest, "Missing required parameter: currency")
                         return@post
