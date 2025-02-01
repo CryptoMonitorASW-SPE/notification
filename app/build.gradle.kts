@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.ktor.server.core.jvm)
     implementation(libs.ktor.server.netty.jvm)
     implementation(libs.ktor.server.content.negotiation.jvm)
+    implementation(libs.kmongo.coroutine.serialization)
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
