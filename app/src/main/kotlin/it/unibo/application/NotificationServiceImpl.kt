@@ -13,7 +13,6 @@ class NotificationServiceImpl(
     private val priceAlertRepository: PriceAlertRepository,
     private val eventDispatcher: EventDispatcher,
 ) : NotificationService {
-
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     /**
@@ -40,7 +39,11 @@ class NotificationServiceImpl(
                     }
 
                 if (!alert.triggered && shouldTrigger) {
-                    logger.info("Triggering alert for user: ${alert.userId}, crypto: ${alert.cryptoId}, alert price: ${alert.alertPrice}, current price: ${cryptoPrice.price}")
+                    logger.info(
+                        "Triggering alert for user: ${alert.userId}," +
+                            " crypto: ${alert.cryptoId}," +
+                            " alert price: ${alert.alertPrice}, current price: ${cryptoPrice.price}",
+                    )
 
                     // Build the JSON payload for the notification.
                     val notificationJson =
@@ -60,7 +63,12 @@ class NotificationServiceImpl(
                     priceAlertRepository.markAsTriggered(alert)
                     logger.info("Alert marked as triggered: ${alert.userId}")
                 } else {
-                    logger.info("Alert not triggered for user: ${alert.userId}, crypto: ${alert.cryptoId}, alert price: ${alert.alertPrice}, current price: ${cryptoPrice.price}")
+                    logger.info(
+                        "Alert not triggered for user: ${alert.userId}," +
+                            " crypto: ${alert.cryptoId}, " +
+                            "alert price: ${alert.alertPrice}," +
+                            " current price: ${cryptoPrice.price}",
+                    )
                 }
             }
         }

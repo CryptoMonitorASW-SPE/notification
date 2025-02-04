@@ -99,9 +99,15 @@ class WebServer(private val notificationService: NotificationService) {
                             return@post
                         }
 
-                    val alert = PriceAlert(userId = userId, cryptoId = cryptoId,
-                        alertPrice = price, currency = currency,
-                        message = message, alertType = alertType)
+                    val alert =
+                        PriceAlert(
+                            userId = userId,
+                            cryptoId = cryptoId,
+                            alertPrice = price,
+                            currency = currency,
+                            message = message,
+                            alertType = alertType,
+                        )
                     notificationService.createAlert(alert)
                     logger.info("Alert created: $alert")
                     call.respond(HttpStatusCode.OK, "Alert created")

@@ -28,15 +28,18 @@ class EventDispatcherAdapter(
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
 ) : EventDispatcher {
     private val logger = LoggerFactory.getLogger(EventDispatcherAdapter::class.java)
-    private val client = HttpClient(CIO) {
-        install(ContentNegotiation){
-            json(Json {
-                prettyPrint = true
-                isLenient = true
-                ignoreUnknownKeys = true
-            })
+    private val client =
+        HttpClient(CIO) {
+            install(ContentNegotiation) {
+                json(
+                    Json {
+                        prettyPrint = true
+                        isLenient = true
+                        ignoreUnknownKeys = true
+                    },
+                )
+            }
         }
-    }
     private val mutex = Mutex()
 
     override fun notifyUser(data: JsonElement) {

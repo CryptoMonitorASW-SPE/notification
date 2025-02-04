@@ -8,7 +8,7 @@ import org.bson.types.ObjectId
 @Serializable
 enum class AlertType {
     ABOVE,
-    BELOW
+    BELOW,
 }
 
 @Serializable
@@ -22,4 +22,3 @@ data class PriceAlert(
     val alertType: AlertType,
     val triggered: Boolean = false,
 )
-
