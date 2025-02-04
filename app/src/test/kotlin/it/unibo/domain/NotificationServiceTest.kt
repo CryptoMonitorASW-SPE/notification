@@ -45,7 +45,7 @@ class FakeEventDispatcherAdapter : EventDispatcher {
 
 class NotificationServiceTest {
     @Test
-    fun `test createAlert and handlePriceUpdate triggers notification`() =
+    fun `test createAlert and handlePriceUpdate triggers UP_THRESHOLD notification`() =
         runBlocking {
             // Arrange: create fake repository and dispatcher.
             val fakeRepository = FakePriceAlertRepository()
@@ -62,6 +62,7 @@ class NotificationServiceTest {
                     alertPrice = 50000.0,
                     currency = Currency.USD,
                     message = Message("Alert triggered for crypto: bitcoin"),
+                    alertType = AlertType.ABOVE,
                 )
             notificationService.createAlert(alert)
 
@@ -100,6 +101,65 @@ class NotificationServiceTest {
             // Note: Numeric values may be represented as strings, so we compare string representations.
             assertEquals("50000.0", notification["alertPrice"]?.jsonPrimitive?.content)
             assertEquals("60000.0", notification["currentPrice"]?.jsonPrimitive?.content)
+            assertEquals("Alert triggered for crypto: bitcoin", notification["message"]?.jsonPrimitive?.content)
+        }
+
+    @Test
+    fun `test createAlert and handlePriceUpdate triggers DOWN_THRESHOLD notification`() =
+        runBlocking {
+            // Arrange: create fake repository and dispatcher.
+            val fakeRepository = FakePriceAlertRepository()
+            val fakeDispatcher = FakeEventDispatcherAdapter()
+
+            // Initialize the notification service with our fakes.
+            val notificationService = NotificationServiceImpl(fakeRepository, fakeDispatcher)
+
+            // 1. Create a new alert and save it.
+            val alert =
+                PriceAlert(
+                    userId = "user1",
+                    cryptoId = "bitcoin",
+                    alertPrice = 50000.0,
+                    currency = Currency.USD,
+                    message = Message("Alert triggered for crypto: bitcoin"),
+                    alertType = AlertType.BELOW,
+                )
+            notificationService.createAlert(alert)
+
+            // Verify that the alert was saved (and not triggered yet).
+            assertEquals(1, fakeRepository.alerts.size)
+            assertTrue(fakeRepository.alerts[0].triggered.not())
+
+            // 2. Create a dummy price update: a price for "bitcoin" that is below the alert threshold.
+            val cryptoPrice =
+                CryptoPrice(
+                    id = "bitcoin",
+                    price = 40000.0,
+                    symbol = "BTC",
+                )
+            val priceUpdate =
+                PriceUpdate(
+                    payload = listOf(cryptoPrice),
+                    timestamp = "2021-09-01T12:00:00Z",
+                )
+            val priceUpdateCurrency = PriceUpdateCurrency(currency = Currency.USD, priceUpdate = priceUpdate)
+
+            // Act: Process the price update.
+            notificationService.handlePriceUpdate(priceUpdateCurrency)
+
+            // 3. Verify that the alert is now triggered.
+            val pendingAlerts = fakeRepository.getAlertsForCrypto("bitcoin", Currency.USD)
+            assertTrue(pendingAlerts.isEmpty(), "Alert should be triggered and no longer returned as pending.")
+
+            // 4. Verify that a notification was sent.
+            assertEquals(1, fakeDispatcher.notifications.size)
+            val notification = fakeDispatcher.notifications[0].jsonObject
+
+            // Check that the notification contains the expected data.
+            assertEquals("user1", notification["userId"]?.jsonPrimitive?.content)
+            assertEquals("bitcoin", notification["cryptoId"]?.jsonPrimitive?.content)
+            assertEquals("50000.0", notification["alertPrice"]?.jsonPrimitive?.content)
+            assertEquals("40000.0", notification["currentPrice"]?.jsonPrimitive?.content)
             assertEquals("Alert triggered for crypto: bitcoin", notification["message"]?.jsonPrimitive?.content)
         }
 }

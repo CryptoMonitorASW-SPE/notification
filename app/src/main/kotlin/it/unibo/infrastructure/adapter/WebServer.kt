@@ -12,12 +12,15 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import it.unibo.application.NotificationService
+import it.unibo.domain.AlertType
 import it.unibo.domain.Currency
 import it.unibo.domain.Message
 import it.unibo.domain.PriceAlert
 import it.unibo.domain.PriceUpdate
 import it.unibo.domain.PriceUpdateCurrency
 import kotlinx.serialization.SerializationException
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class WebServer(private val notificationService: NotificationService) {
     companion object {
@@ -25,6 +28,8 @@ class WebServer(private val notificationService: NotificationService) {
         const val GRACE_PERIOD = 1000L
         const val TIMEOUT = 5000L
     }
+
+    private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     private val server =
         embeddedServer(Netty, port = PORT) {
@@ -37,6 +42,7 @@ class WebServer(private val notificationService: NotificationService) {
                         return@post
                     }
                     val priceUpdate = call.receive<PriceUpdate>()
+                    logger.info("Received price update in $currencyParam : $priceUpdate")
                     val priceUpdateCurrency = PriceUpdateCurrency(Currency.fromCode(currencyParam), priceUpdate)
 
                     notificationService.handlePriceUpdate(priceUpdateCurrency)
@@ -44,11 +50,13 @@ class WebServer(private val notificationService: NotificationService) {
                 }
 
                 post("/createAlert") {
-                    val userId = call.authenticate(System.getenv("JWT_SECRET")) ?: return@post
+                    logger.info("Received alert creation request")
+                    val userId = call.authenticate(System.getenv("JWT_SIMMETRIC_KEY")) ?: return@post
 
                     val cryptoId = call.parameters["cryptoId"]
                     val priceParam = call.parameters["price"]
                     val currencyParam = call.parameters["currency"]
+                    val alertTypeParam = call.parameters["alertType"]
 
                     if (currencyParam == null) {
                         call.respond(HttpStatusCode.BadRequest, "Missing required parameter: currency")
@@ -60,6 +68,10 @@ class WebServer(private val notificationService: NotificationService) {
                     }
                     if (priceParam == null) {
                         call.respond(HttpStatusCode.BadRequest, "Missing required parameter: price")
+                        return@post
+                    }
+                    if (alertTypeParam == null) {
+                        call.respond(HttpStatusCode.BadRequest, "Missing required parameter: alertType")
                         return@post
                     }
 
@@ -76,9 +88,22 @@ class WebServer(private val notificationService: NotificationService) {
 
                     val currency = Currency.fromCode(currencyParam)
                     val price = priceParam.toDouble()
+                    val alertType =
+                        try {
+                            AlertType.valueOf(alertTypeParam.uppercase())
+                        } catch (e: IllegalArgumentException) {
+                            call.respond(
+                                HttpStatusCode.BadRequest,
+                                "Invalid alert type. Allowed values are: ${AlertType.entries.joinToString()}",
+                            )
+                            return@post
+                        }
 
-                    val alert = PriceAlert(userId, cryptoId, price, currency, message)
+                    val alert = PriceAlert(userId = userId, cryptoId = cryptoId,
+                        alertPrice = price, currency = currency,
+                        message = message, alertType = alertType)
                     notificationService.createAlert(alert)
+                    logger.info("Alert created: $alert")
                     call.respond(HttpStatusCode.OK, "Alert created")
                 }
 

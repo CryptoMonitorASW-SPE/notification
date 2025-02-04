@@ -40,9 +40,12 @@ class MongoPriceAlertRepository : PriceAlertRepository {
     }
 
     override suspend fun markAsTriggered(alert: PriceAlert) {
-        alertsCollection.updateOne(
-            PriceAlert::userId eq alert.userId,
-            setValue(PriceAlert::triggered, true),
-        )
+        if(alert.id != null){
+            alertsCollection.updateOne(
+                PriceAlert::id eq alert.id,
+                setValue(PriceAlert::triggered, true),
+            )
+        }
+
     }
 }
