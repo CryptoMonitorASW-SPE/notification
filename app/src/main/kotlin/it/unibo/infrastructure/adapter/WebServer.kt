@@ -92,6 +92,7 @@ class WebServer(private val notificationService: NotificationService) {
                         try {
                             AlertType.valueOf(alertTypeParam.uppercase())
                         } catch (e: IllegalArgumentException) {
+                            logger.error("Invalid alert type: $alertTypeParam", e)
                             call.respond(
                                 HttpStatusCode.BadRequest,
                                 "Invalid alert type. Allowed values are: ${AlertType.entries.joinToString()}",

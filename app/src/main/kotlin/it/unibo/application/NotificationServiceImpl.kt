@@ -29,7 +29,10 @@ class NotificationServiceImpl(
 
             // Get any pending alerts for this crypto and currency.
             val alerts = priceAlertRepository.getAlertsForCrypto(cryptoPrice.id, priceUpdate.currency)
-            logger.info("Found ${alerts.size} alerts for crypto: ${cryptoPrice.id} and currency: ${priceUpdate.currency}")
+            logger.info(
+                "Found ${alerts.size} alerts " +
+                    "for crypto: ${cryptoPrice.id} and currency: ${priceUpdate.currency}",
+            )
 
             alerts.forEach { alert ->
                 val shouldTrigger =
