@@ -31,6 +31,27 @@ class FakePriceAlertRepository : PriceAlertRepository {
             alerts[index] = alerts[index].copy(triggered = true)
         }
     }
+
+    // Stub implementations for additional methods.
+    override suspend fun getAlertsForUser(userId: String): List<PriceAlert> {
+        return alerts.filter { it.userId == userId }
+    }
+
+    override suspend fun deleteAlert(alertId: String): Boolean {
+        return alerts.removeIf { it.id == alertId }
+    }
+
+    override suspend fun setActiveStatus(
+        alertId: String,
+        status: Boolean,
+    ): Boolean {
+        val index = alerts.indexOfFirst { it.id == alertId }
+        if (index >= 0) {
+            alerts[index] = alerts[index].copy(active = status)
+            return true
+        }
+        return false
+    }
 }
 
 // A fake event dispatcher that collects notifications in a list.
@@ -57,12 +78,15 @@ class NotificationServiceTest {
             // 1. Create a new alert and save it.
             val alert =
                 PriceAlert(
+                    id = "alert1",
                     userId = "user1",
                     cryptoId = "bitcoin",
                     alertPrice = 50000.0,
                     currency = Currency.USD,
                     message = Message("Alert triggered for crypto: bitcoin"),
                     alertType = AlertType.ABOVE,
+                    active = true,
+                    triggered = false,
                 )
             notificationService.createAlert(alert)
 
@@ -117,12 +141,15 @@ class NotificationServiceTest {
             // 1. Create a new alert and save it.
             val alert =
                 PriceAlert(
+                    id = "alert2",
                     userId = "user1",
                     cryptoId = "bitcoin",
                     alertPrice = 50000.0,
                     currency = Currency.USD,
                     message = Message("Alert triggered for crypto: bitcoin"),
                     alertType = AlertType.BELOW,
+                    active = true,
+                    triggered = false,
                 )
             notificationService.createAlert(alert)
 
