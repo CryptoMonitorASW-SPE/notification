@@ -41,7 +41,7 @@ class NotificationServiceImpl(
                         AlertType.BELOW -> cryptoPrice.price <= alert.alertPrice
                     }
 
-                if (!alert.triggered && shouldTrigger) {
+                if (!alert.triggered && shouldTrigger && alert.active) {
                     logger.info(
                         "Triggering alert for user: ${alert.userId}," +
                             " crypto: ${alert.cryptoId}," +
@@ -90,7 +90,14 @@ class NotificationServiceImpl(
         return priceAlertRepository.getAlertsForUser(userId)
     }
 
-    override suspend fun deleteAlert(alertId: String) {
-        priceAlertRepository.deleteAlert(alertId)
+    override suspend fun deleteAlert(alertId: String): Boolean {
+        return priceAlertRepository.deleteAlert(alertId)
+    }
+
+    override suspend fun setActiveStatus(
+        alertId: String,
+        status: Boolean,
+    ): Boolean {
+        return priceAlertRepository.setActiveStatus(alertId, status)
     }
 }

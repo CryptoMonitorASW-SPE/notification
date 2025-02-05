@@ -10,7 +10,6 @@ enum class AlertType {
 
 @Serializable
 data class PriceAlert(
-//    @Contextual @SerialName("_id") val id: ObjectId? = null,
     val id: String? = null,
     val userId: String,
     val cryptoId: String,
@@ -19,4 +18,5 @@ data class PriceAlert(
     val message: Message,
     val alertType: AlertType,
     val triggered: Boolean = false,
+    val active: Boolean = true,
 )

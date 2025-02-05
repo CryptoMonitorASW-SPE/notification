@@ -12,5 +12,10 @@ interface PriceAlertRepository {
 
     suspend fun getAlertsForUser(userId: String): List<PriceAlert>
 
-    suspend fun deleteAlert(alertId: String)
+    suspend fun deleteAlert(alertId: String): Boolean
+
+    suspend fun setActiveStatus(
+        alertId: String,
+        status: Boolean,
+    ): Boolean
 }

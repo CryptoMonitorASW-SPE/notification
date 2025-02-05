@@ -10,5 +10,10 @@ interface NotificationService {
 
     suspend fun getAlerts(userId: String): List<PriceAlert>
 
-    suspend fun deleteAlert(alertId: String)
+    suspend fun deleteAlert(alertId: String): Boolean
+
+    suspend fun setActiveStatus(
+        alertId: String,
+        status: Boolean,
+    ): Boolean
 }

@@ -60,7 +60,20 @@ class MongoPriceAlertRepository : PriceAlertRepository {
         return alertsCollection.find(PriceAlert::userId eq userId).toList()
     }
 
-    override suspend fun deleteAlert(alertId: String) {
-        alertsCollection.deleteOne(PriceAlert::id eq alertId)
+    override suspend fun deleteAlert(alertId: String): Boolean {
+        val res = alertsCollection.deleteOne(PriceAlert::id eq alertId)
+        return res.deletedCount > 0
+    }
+
+    override suspend fun setActiveStatus(
+        alertId: String,
+        status: Boolean,
+    ): Boolean {
+        val res =
+            alertsCollection.updateOne(
+                PriceAlert::id eq alertId,
+                setValue(PriceAlert::active, status),
+            )
+        return res.matchedCount > 0
     }
 }

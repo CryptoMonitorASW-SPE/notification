@@ -124,6 +124,31 @@ class WebServer(private val notificationService: NotificationService) {
                     call.respond(alerts)
                 }
 
+                put("/active") {
+                    call.authenticate(System.getenv("JWT_SIMMETRIC_KEY")) ?: return@put
+                    val alertId = call.parameters["alertId"]
+                    val status = call.parameters["status"]
+                    if (alertId == null) {
+                        call.respond(HttpStatusCode.BadRequest, "Missing required parameter: alertId")
+                        return@put
+                    }
+                    if (status == null) {
+                        call.respond(HttpStatusCode.BadRequest, "Missing required parameter: status")
+                        return@put
+                    }
+                    if (status != "true" && status != "false") {
+                        call.respond(HttpStatusCode.BadRequest, "Invalid status value: $status")
+                        return@put
+                    }
+                    val res = notificationService.setActiveStatus(alertId, status.toBoolean())
+                    if (!res) {
+                        call.respond(HttpStatusCode.BadRequest, "Alert not found")
+                        return@put
+                    } else {
+                        call.respond(HttpStatusCode.OK, "Alert status updated")
+                    }
+                }
+
                 delete("/alerts") {
                     call.authenticate(System.getenv("JWT_SIMMETRIC_KEY")) ?: return@delete
                     val alertId = call.parameters["alertId"]
@@ -131,8 +156,13 @@ class WebServer(private val notificationService: NotificationService) {
                         call.respond(HttpStatusCode.BadRequest, "Missing required parameter: alertId")
                         return@delete
                     }
-                    notificationService.deleteAlert(alertId)
-                    call.respond(HttpStatusCode.OK, "Alerts deleted")
+                    val res = notificationService.deleteAlert(alertId)
+                    if (!res) {
+                        call.respond(HttpStatusCode.BadRequest, "Alert not found")
+                        return@delete
+                    } else {
+                        call.respond(HttpStatusCode.OK, "Alert deleted")
+                    }
                 }
             }
         }
