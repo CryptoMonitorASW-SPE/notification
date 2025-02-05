@@ -85,4 +85,12 @@ class NotificationServiceImpl(
     override suspend fun createAlert(alert: PriceAlert) {
         priceAlertRepository.save(alert)
     }
+
+    override suspend fun getAlerts(userId: String): List<PriceAlert> {
+        return priceAlertRepository.getAlertsForUser(userId)
+    }
+
+    override suspend fun deleteAlert(alertId: String) {
+        priceAlertRepository.deleteAlert(alertId)
+    }
 }

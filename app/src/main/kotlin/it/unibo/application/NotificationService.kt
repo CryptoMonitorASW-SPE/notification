@@ -7,4 +7,8 @@ interface NotificationService {
     suspend fun handlePriceUpdate(priceUpdate: PriceUpdateCurrency)
 
     suspend fun createAlert(alert: PriceAlert)
+
+    suspend fun getAlerts(userId: String): List<PriceAlert>
+
+    suspend fun deleteAlert(alertId: String)
 }

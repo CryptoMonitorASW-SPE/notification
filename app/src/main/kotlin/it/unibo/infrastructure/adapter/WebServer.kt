@@ -117,6 +117,23 @@ class WebServer(private val notificationService: NotificationService) {
                 get("/health") {
                     call.respond(mapOf("status" to "healthy"))
                 }
+
+                get("/alerts") {
+                    val userId = call.authenticate(System.getenv("JWT_SIMMETRIC_KEY")) ?: return@get
+                    val alerts = notificationService.getAlerts(userId)
+                    call.respond(alerts)
+                }
+
+                delete("/alerts") {
+                    call.authenticate(System.getenv("JWT_SIMMETRIC_KEY")) ?: return@delete
+                    val alertId = call.parameters["alertId"]
+                    if (alertId == null) {
+                        call.respond(HttpStatusCode.BadRequest, "Missing required parameter: alertId")
+                        return@delete
+                    }
+                    notificationService.deleteAlert(alertId)
+                    call.respond(HttpStatusCode.OK, "Alerts deleted")
+                }
             }
         }
 

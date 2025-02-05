@@ -9,4 +9,8 @@ interface PriceAlertRepository {
     ): List<PriceAlert>
 
     suspend fun markAsTriggered(alert: PriceAlert)
+
+    suspend fun getAlertsForUser(userId: String): List<PriceAlert>
+
+    suspend fun deleteAlert(alertId: String)
 }
