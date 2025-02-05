@@ -26,11 +26,9 @@ class MongoPriceAlertRepository : PriceAlertRepository {
 
     override suspend fun save(alert: PriceAlert) {
         val result = alertsCollection.insertOne(alert)
-        val insertedId =
-            result.insertedId?.asObjectId()?.value
-                ?: throw IllegalStateException("Failed to retrieve inserted ID")
-        val filter =
-            Filters.eq("_id", insertedId)
+        val insertedId = result.insertedId?.asObjectId()?.value
+        check(insertedId != null) { "Failed to retrieve inserted ID" }
+        val filter = Filters.eq("_id", insertedId)
 
         alertsCollection.replaceOne(filter, alert.copy(id = insertedId.toString()))
     }
