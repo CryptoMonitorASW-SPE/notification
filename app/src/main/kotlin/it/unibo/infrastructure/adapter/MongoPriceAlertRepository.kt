@@ -13,7 +13,6 @@ import org.litote.kmongo.reactivestreams.KMongo
 import org.litote.kmongo.setValue
 
 class MongoPriceAlertRepository : PriceAlertRepository {
-    // “price_alerts” is the Mongo collection name.
     private val database: CoroutineDatabase
 
     init {
