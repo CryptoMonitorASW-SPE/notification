@@ -1,4 +1,4 @@
-package it.unibo.domain.port
+package it.unibo.domain.ports
 
 import kotlinx.serialization.json.JsonElement
 
