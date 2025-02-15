@@ -1,4 +1,7 @@
-package it.unibo.domain
+package it.unibo.domain.ports
+
+import it.unibo.domain.Currency
+import it.unibo.domain.PriceAlert
 
 interface PriceAlertRepository {
     suspend fun save(alert: PriceAlert)

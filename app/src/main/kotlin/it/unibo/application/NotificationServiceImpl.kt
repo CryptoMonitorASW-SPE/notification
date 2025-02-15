@@ -2,9 +2,9 @@ package it.unibo.application
 
 import it.unibo.domain.AlertType
 import it.unibo.domain.PriceAlert
-import it.unibo.domain.PriceAlertRepository
 import it.unibo.domain.PriceUpdateCurrency
-import it.unibo.domain.port.EventDispatcher
+import it.unibo.domain.ports.EventDispatcher
+import it.unibo.domain.ports.PriceAlertRepository
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import org.slf4j.LoggerFactory

@@ -1,7 +1,14 @@
-package it.unibo.domain
+package it.unibo.application
 
-import it.unibo.application.NotificationServiceImpl
-import it.unibo.domain.port.EventDispatcher
+import it.unibo.domain.AlertType
+import it.unibo.domain.CryptoPrice
+import it.unibo.domain.Currency
+import it.unibo.domain.Message
+import it.unibo.domain.PriceAlert
+import it.unibo.domain.PriceUpdate
+import it.unibo.domain.PriceUpdateCurrency
+import it.unibo.domain.ports.EventDispatcher
+import it.unibo.domain.ports.PriceAlertRepository
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject

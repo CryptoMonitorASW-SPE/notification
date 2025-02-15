@@ -3,7 +3,7 @@ package it.unibo.infrastructure.adapter
 import com.mongodb.client.model.Filters
 import it.unibo.domain.Currency
 import it.unibo.domain.PriceAlert
-import it.unibo.domain.PriceAlertRepository
+import it.unibo.domain.ports.PriceAlertRepository
 import org.litote.kmongo.and
 import org.litote.kmongo.coroutine.CoroutineCollection
 import org.litote.kmongo.coroutine.CoroutineDatabase
