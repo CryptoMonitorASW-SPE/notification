@@ -4,6 +4,7 @@ import it.unibo.domain.AlertType
 import it.unibo.domain.PriceAlert
 import it.unibo.domain.PriceUpdateCurrency
 import it.unibo.domain.ports.EventDispatcher
+import it.unibo.domain.ports.NotificationService
 import it.unibo.domain.ports.PriceAlertRepository
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put

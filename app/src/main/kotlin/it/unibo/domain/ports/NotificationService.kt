@@ -1,4 +1,4 @@
-package it.unibo.application
+package it.unibo.domain.ports
 
 import it.unibo.domain.PriceAlert
 import it.unibo.domain.PriceUpdateCurrency
