@@ -11,13 +11,13 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import it.unibo.application.NotificationService
 import it.unibo.domain.AlertType
 import it.unibo.domain.Currency
 import it.unibo.domain.Message
 import it.unibo.domain.PriceAlert
 import it.unibo.domain.PriceUpdate
 import it.unibo.domain.PriceUpdateCurrency
+import it.unibo.domain.ports.NotificationService
 import kotlinx.serialization.SerializationException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
