@@ -1,13 +1,11 @@
 import io.github.andreabrighi.gradle.gitsemver.conventionalcommit.ConventionalCommit
 
 plugins {
-    id("org.danilopianini.git-sensitive-semantic-versioning") version "4.0.2"
-    // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
+    alias(libs.plugins.git.sensitive.semantic.versioning)
     alias(libs.plugins.kotlin.jvm)
-    kotlin("plugin.serialization") version "1.9.25"
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
-    // Apply the application plugin to add support for building a CLI application in Java.
     application
 }
 
@@ -16,7 +14,6 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        // Add the plugin to the classpath
         classpath("io.github.andreabrighi:conventional-commit-strategy-for-git-sensitive-semantic-versioning-gradle-plugin:1.0.15")
     }
 }
@@ -27,7 +24,6 @@ gitSemVer {
 }
 
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
 
@@ -35,8 +31,8 @@ dependencies {
     // Use the Kotlin JUnit 5 integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 
-    // Use the JUnit 5 integration.
     testImplementation(libs.junit.jupiter.engine)
+    testImplementation(libs.konsist)
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
@@ -47,7 +43,7 @@ dependencies {
     implementation(libs.logback.classic)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.json)
-    implementation("io.github.cdimascio:dotenv-kotlin:6.5.0")
+    implementation(libs.dotenv.kotlin)
     implementation(libs.ktor.server.core.jvm)
     implementation(libs.ktor.server.netty.jvm)
     implementation(libs.ktor.server.content.negotiation.jvm)
