@@ -22,6 +22,13 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import org.slf4j.LoggerFactory
 
+/**
+ * Adapter for dispatching events to an external HTTP server.
+ *
+ * @property httpServerHost The host of the HTTP server.
+ * @property httpServerPort The port of the HTTP server.
+ * @property scope The coroutine scope for launching asynchronous tasks.
+ */
 class EventDispatcherAdapter(
     private val httpServerHost: String = "event-dispatcher",
     private val httpServerPort: Int = 3000,

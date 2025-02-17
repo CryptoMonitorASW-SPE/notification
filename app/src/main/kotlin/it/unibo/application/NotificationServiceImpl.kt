@@ -10,18 +10,18 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import org.slf4j.LoggerFactory
 
+/**
+ * Implementation of the NotificationService interface.
+ *
+ * @property priceAlertRepository The repository for managing price alerts.
+ * @property eventDispatcher The dispatcher for sending notifications.
+ */
 class NotificationServiceImpl(
     private val priceAlertRepository: PriceAlertRepository,
     private val eventDispatcher: EventDispatcher,
 ) : NotificationService {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    /**
-     * When a price update is received, for each crypto price the service:
-     *  - Retrieves all non-triggered alerts for the given crypto and currency.
-     *  - Checks if the update meets the alert condition based on AlertType.
-     *  - If so, it sends a notification via the event dispatcher and marks the alert as triggered.
-     */
     override suspend fun handlePriceUpdate(priceUpdate: PriceUpdateCurrency) {
         logger.info("Handling price update for currency: ${priceUpdate.currency}")
 
@@ -80,9 +80,6 @@ class NotificationServiceImpl(
         logger.info("Completed handling price update for currency: ${priceUpdate.currency}")
     }
 
-    /**
-     * Create a new price alert by saving it to the repository.
-     */
     override suspend fun createAlert(alert: PriceAlert) {
         priceAlertRepository.save(alert)
     }
