@@ -28,14 +28,15 @@ repositories {
 }
 
 dependencies {
-    // Use the Kotlin JUnit 5 integration.
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-
+    // Dependencies for testing
+    testImplementation(libs.kotlin.test.junit5)
     testImplementation(libs.junit.jupiter.engine)
     testImplementation(libs.konsist)
 
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    // Dependencies for runtime
+    testRuntimeOnly(libs.junit.platform.launcher)
 
+    // Dependencies for the application
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.content.negotiation)
@@ -59,12 +60,10 @@ java {
 }
 
 application {
-    // Define the main class for the application.
     mainClass = "it.unibo.MainKt"
 }
 
 tasks.named<Test>("test") {
-    // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
 
@@ -83,7 +82,7 @@ tasks.register("printVersion") {
 tasks.jar {
     archiveFileName.set("app.jar")
     manifest {
-        attributes["Main-Class"] = application.mainClass.get() // or specify your main class directly
+        attributes["Main-Class"] = application.mainClass.get()
     }
 
     // Include all runtime dependencies into the JAR file

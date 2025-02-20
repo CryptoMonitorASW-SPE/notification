@@ -30,6 +30,8 @@ junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", vers
 kmongo-coroutine-serialization = { group = "org.litote.kmongo", name = "kmongo-coroutine-serialization", version.ref = "kmongo" }
 dotenv-kotlin = { group = "io.github.cdimascio", name = "dotenv-kotlin", version.ref = "dotenvKotlin" }
 konsist = { group = "com.lemonappdev", name = "konsist", version.ref = "konsist" }
+kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit5" }
+junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }
 
 [plugins]
 git-sensitive-semantic-versioning = { id = "org.danilopianini.git-sensitive-semantic-versioning", version.ref = "gitSensitiveSemanticVersioning" }
