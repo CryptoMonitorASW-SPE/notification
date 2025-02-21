@@ -37,17 +37,11 @@ dependencies {
     testRuntimeOnly(libs.junit.platform.launcher)
 
     // Dependencies for the application
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.cio)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.bundles.ktor)
     implementation(libs.logback.classic)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.dotenv.kotlin)
-    implementation(libs.ktor.server.core.jvm)
-    implementation(libs.ktor.server.netty.jvm)
-    implementation(libs.ktor.server.content.negotiation.jvm)
     implementation(libs.kmongo.coroutine.serialization)
     implementation(libs.auth0.jwt)
 }

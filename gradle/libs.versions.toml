@@ -33,6 +33,17 @@ konsist = { group = "com.lemonappdev", name = "konsist", version.ref = "konsist"
 kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit5" }
 junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }
 
+[bundles]
+ktor = [
+  "ktor-server-core-jvm",
+  "ktor-server-netty-jvm",
+  "ktor-server-content-negotiation-jvm",
+  "ktor-client-core",
+  "ktor-client-cio",
+  "ktor-client-content-negotiation",
+  "ktor-serialization-kotlinx-json"
+]
+
 [plugins]
 git-sensitive-semantic-versioning = { id = "org.danilopianini.git-sensitive-semantic-versioning", version.ref = "gitSensitiveSemanticVersioning" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.1.10" }
