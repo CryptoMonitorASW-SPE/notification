@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.dokka)
     application
 }
 
@@ -57,13 +58,22 @@ application {
     mainClass = "it.unibo.MainKt"
 }
 
+detekt {
+    buildUponDefaultConfig = true
+    config.setFrom("config/detekt/detekt.yaml")
+}
+
+tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
+    // Disable configuration cache for this task
+    notCompatibleWithConfigurationCache("DokkaTask is not compatible with configuration cache")
+}
+
 tasks.named<Test>("test") {
     useJUnitPlatform()
 }
 
-detekt {
-    buildUponDefaultConfig = true
-    config.setFrom("config/detekt/detekt.yaml")
+tasks.named("build") {
+    dependsOn("ktlintFormat", "detekt", "test")
 }
 
 tasks.register("printVersion") {

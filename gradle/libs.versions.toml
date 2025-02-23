@@ -12,7 +12,7 @@ kmongo = "5.2.1"
 auth0Jwt = "4.5.0"
 dotenvKotlin= "6.5.0"
 konsist = "0.17.3"
-
+dokka = "2.0.0"
 
 [libraries]
 auth0-jwt = { group = "com.auth0", name = "java-jwt", version.ref = "auth0Jwt" }
@@ -50,3 +50,4 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.1.10" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
