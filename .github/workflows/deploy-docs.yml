@@ -64,6 +64,9 @@ jobs:
           git_user_signingkey: true
           git_commit_gpgsign: true
 
+      - name: Clean docs directory
+        run: rm -rf docs/*
+
       - name: Create and Checkout dokkaDoc Branch
         run: |
           git fetch origin dokkaDoc:dokkaDoc || true
