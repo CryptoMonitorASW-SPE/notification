@@ -112,15 +112,6 @@ tasks.register<Exec>("dockerBuild") {
     commandLine("docker", "build", "-f", "Dockerfile", "-t", "notification:latest", ".")
 }
 
-tasks.register<Exec>("dockerRun") {
-    group = "docker"
-    description = "Runs the Docker container for the application."
-
-    dependsOn("dockerBuild")
-    // Adjust the port mapping as needed
-    commandLine("docker", "run", "-p", "8080:8080", "notification:latest")
-}
-
 tasks.register<Exec>("dockerClean") {
     group = "docker"
     description = "Removes dangling Docker images."
