@@ -32,8 +32,14 @@ jobs:
             https://api.github.com/repos/$REPO/git/refs/heads/$BRANCH)
 
           if [ "$RESPONSE" -ne 204 ]; then
-            echo "Branch deletion failed with response code: $RESPONSE"
-            exit 1
+            if [ "$RESPONSE" -eq 403 ]; then
+              echo "Branch deletion failed with response code: $RESPONSE. Likely due to branch protection."
+              exit 0
+            else
+              echo "Branch deletion failed with response code: $RESPONSE"
+              cat response.json
+              exit 1
+            fi
           fi
 
           echo "Branch $BRANCH deleted successfully."
