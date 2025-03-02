@@ -20,7 +20,7 @@ class MongoPriceAlertRepository : PriceAlertRepository {
         val mongoPort = System.getenv("MONGODB_PORT") ?: "27017"
         val mongoDatabase = System.getenv("MONGODB_DATABASE") ?: "dbsa"
         val mongoConnectionString = "mongodb://$mongoHost:$mongoPort/$mongoDatabase"
-        
+
         val client = KMongo.createClient(mongoConnectionString)
         database = client.getDatabase(mongoDatabase).coroutine
     }

@@ -59,21 +59,31 @@ jobs:
 
       - name: Run Detekt
         id: detekt
-        run: ./gradlew detekt
+        continue-on-error: true
+        run: |
+          ./gradlew detekt
 
       - name: Check if Detekt report is empty
         id: check_detekt_report
         run: |
           if [ -s app/build/reports/detekt/detekt.md ]; then
-            echo "Detekt report is not empty"
-            exit 0
-          else
-            echo "Detekt report is empty"
-            exit 1
-          fi
+          echo "Detekt report is not empty"
+          exit 0
+            else
+          echo "Detekt report is empty"
+          exit 1
+            fi
 
       - name: Comment PR with Detekt report
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           path: app/build/reports/detekt/detekt.md
+
+      - name: Fail if Detekt failed
+        if: steps.detekt.outcome != 'success'
+        run: |
+          echo "Detekt encountered an error. Failing the workflow."
+          exit 1
+  
+        

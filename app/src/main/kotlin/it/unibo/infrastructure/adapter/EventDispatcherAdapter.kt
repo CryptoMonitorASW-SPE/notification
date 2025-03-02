@@ -33,7 +33,6 @@ class EventDispatcherAdapter(
     private val httpServerHost: String = System.getenv("EVENT_DISPATCHER_SERVICE_NAME") ?: "event-dispatcher",
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
 ) : EventDispatcher {
-
     companion object {
         const val DEFAULT_PORT = 3000
     }
@@ -55,6 +54,8 @@ class EventDispatcherAdapter(
     private val mutex = Mutex()
 
     override fun notifyUser(data: JsonElement) {
+        val endpoint = "/realtime/events/notifyUser " + 8
+
         scope.launch {
             mutex.withLock {
                 try {
