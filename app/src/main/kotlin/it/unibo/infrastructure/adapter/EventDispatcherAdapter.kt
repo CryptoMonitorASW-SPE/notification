@@ -30,10 +30,15 @@ import org.slf4j.LoggerFactory
  * @property scope The coroutine scope for launching asynchronous tasks.
  */
 class EventDispatcherAdapter(
-    private val httpServerHost: String = "event-dispatcher",
-    private val httpServerPort: Int = 3000,
+    private val httpServerHost: String = System.getenv("EVENT_DISPATCHER_SERVICE_NAME") ?: "event-dispatcher",
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
 ) : EventDispatcher {
+
+    companion object {
+        const val DEFAULT_PORT = 3000
+    }
+
+    private val httpServerPort: Int = System.getenv("EVENT_DISPATCHER_SERVICE_PORT")?.toIntOrNull() ?: DEFAULT_PORT
     private val logger = LoggerFactory.getLogger(EventDispatcherAdapter::class.java)
     private val client =
         HttpClient(CIO) {

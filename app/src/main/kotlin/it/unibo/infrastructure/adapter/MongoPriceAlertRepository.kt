@@ -16,9 +16,13 @@ class MongoPriceAlertRepository : PriceAlertRepository {
     private val database: CoroutineDatabase
 
     init {
-        val mongoConnectionString = "mongodb://mongodb:27017/dbsa"
+        val mongoHost = System.getenv("MONGODB_HOST") ?: "mongodb"
+        val mongoPort = System.getenv("MONGODB_PORT") ?: "27017"
+        val mongoDatabase = System.getenv("MONGODB_DATABASE") ?: "dbsa"
+        val mongoConnectionString = "mongodb://$mongoHost:$mongoPort/$mongoDatabase"
+        
         val client = KMongo.createClient(mongoConnectionString)
-        database = client.getDatabase("dbsa").coroutine
+        database = client.getDatabase(mongoDatabase).coroutine
     }
 
     private val alertsCollection: CoroutineCollection<PriceAlert> = database.getCollection()

@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory
 
 class WebServer(private val notificationService: NotificationService) {
     companion object {
-        const val PORT = 8080
+        val PORT = System.getenv("PORT")?.toIntOrNull() ?: 3000
         const val GRACE_PERIOD = 1000L
         const val TIMEOUT = 5000L
     }
