@@ -54,8 +54,6 @@ class EventDispatcherAdapter(
     private val mutex = Mutex()
 
     override fun notifyUser(data: JsonElement) {
-        val endpoint = "/realtime/events/notifyUser " + 8
-
         scope.launch {
             mutex.withLock {
                 try {
