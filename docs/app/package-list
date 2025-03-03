@@ -77,8 +77,10 @@ $dokka.location:it.unibo.infrastructure.adapter//authenticate/io.ktor.server.app
 $dokka.location:it.unibo.infrastructure.adapter/AuthAdapter///PointingToDeclaration/app/it.unibo.infrastructure.adapter/-auth-adapter/index.html
 $dokka.location:it.unibo.infrastructure.adapter/AuthAdapter/AuthAdapter/#kotlin.String/PointingToDeclaration/app/it.unibo.infrastructure.adapter/-auth-adapter/-auth-adapter.html
 $dokka.location:it.unibo.infrastructure.adapter/AuthAdapter/validateToken/#kotlin.String/PointingToDeclaration/app/it.unibo.infrastructure.adapter/-auth-adapter/validate-token.html
+$dokka.location:it.unibo.infrastructure.adapter/EventDispatcherAdapter.Companion///PointingToDeclaration/app/it.unibo.infrastructure.adapter/-event-dispatcher-adapter/-companion/index.html
+$dokka.location:it.unibo.infrastructure.adapter/EventDispatcherAdapter.Companion/DEFAULT_PORT/#/PointingToDeclaration/app/it.unibo.infrastructure.adapter/-event-dispatcher-adapter/-companion/-d-e-f-a-u-l-t_-p-o-r-t.html
 $dokka.location:it.unibo.infrastructure.adapter/EventDispatcherAdapter///PointingToDeclaration/app/it.unibo.infrastructure.adapter/-event-dispatcher-adapter/index.html
-$dokka.location:it.unibo.infrastructure.adapter/EventDispatcherAdapter/EventDispatcherAdapter/#kotlin.String#kotlin.Int#kotlinx.coroutines.CoroutineScope/PointingToDeclaration/app/it.unibo.infrastructure.adapter/-event-dispatcher-adapter/-event-dispatcher-adapter.html
+$dokka.location:it.unibo.infrastructure.adapter/EventDispatcherAdapter/EventDispatcherAdapter/#kotlin.String#kotlinx.coroutines.CoroutineScope/PointingToDeclaration/app/it.unibo.infrastructure.adapter/-event-dispatcher-adapter/-event-dispatcher-adapter.html
 $dokka.location:it.unibo.infrastructure.adapter/EventDispatcherAdapter/close/#/PointingToDeclaration/app/it.unibo.infrastructure.adapter/-event-dispatcher-adapter/close.html
 $dokka.location:it.unibo.infrastructure.adapter/EventDispatcherAdapter/notifyUser/#kotlinx.serialization.json.JsonElement/PointingToDeclaration/app/it.unibo.infrastructure.adapter/-event-dispatcher-adapter/notify-user.html
 $dokka.location:it.unibo.infrastructure.adapter/MongoPriceAlertRepository///PointingToDeclaration/app/it.unibo.infrastructure.adapter/-mongo-price-alert-repository/index.html
